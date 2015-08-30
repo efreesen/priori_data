@@ -14,6 +14,7 @@ GEM
       minitest (~> 5.1)
       thread_safe (~> 0.3, >= 0.3.4)
       tzinfo (~> 1.1)
+    addressable (2.3.8)
     arel (6.0.3)
     awesome_print (1.6.1)
     axiom-types (0.1.1)
@@ -27,6 +28,8 @@ GEM
     coercible (1.0.0)
       descendants_tracker (~> 0.0.1)
     columnize (0.9.0)
+    crack (0.4.2)
+      safe_yaml (~> 1.0.0)
     descendants_tracker (0.0.4)
       thread_safe (~> 0.3, >= 0.3.1)
     diff-lcs (1.2.5)
@@ -42,11 +45,11 @@ GEM
       rack-mount
       virtus (>= 1.0.0)
     hashie (3.4.2)
+    httparty (0.13.5)
+      json (~> 1.8)
+      multi_xml (>= 0.5.2)
     i18n (0.7.0)
     ice_nine (0.11.1)
-    jbuilder (2.3.1)
-      activesupport (>= 3.0.0, < 5)
-      multi_json (~> 1.2)
     json (1.8.3)
     method_source (0.8.2)
     minitest (5.8.0)
@@ -86,26 +89,33 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.3.0)
     rspec-support (3.3.0)
+    safe_yaml (1.0.4)
     slop (3.6.0)
     thread_safe (0.3.5)
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
+    vcr (2.9.3)
     virtus (1.0.5)
       axiom-types (~> 0.1)
       coercible (~> 1.0)
       descendants_tracker (~> 0.0, >= 0.0.3)
       equalizer (~> 0.0, >= 0.0.9)
+    webmock (1.21.0)
+      addressable (>= 2.3.6)
+      crack (>= 0.3.2)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
-  activerecord
-  grape
-  jbuilder (~> 2.0)
+  activerecord (~> 4.2.4)
+  grape (~> 0.13.0)
+  httparty (~> 0.13.5)
   mysql2 (~> 0.3.0)
   pry-meta (~> 0.0.0)
   rspec (~> 3.3.0)
+  vcr
+  webmock
 
 BUNDLED WITH
    1.10.6

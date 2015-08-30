@@ -6,7 +6,11 @@ describe PrioriData::Integration::Base do
   end
 
   describe '.load!' do
-    subject { described_class.load! }
+    subject do
+      VCR.use_cassette("apple_categories_success") do
+        described_class.load!
+      end
+    end
 
     before do
       allow(described_class).to receive(:new).and_return(instance)
@@ -22,7 +26,11 @@ describe PrioriData::Integration::Base do
   end
 
   describe '#load!' do
-    subject { instance.load! }
+    subject do
+      VCR.use_cassette("apple_categories_success") do
+        instance.load!
+      end
+    end
 
     it 'loads all the categories' do
       expect(instance).to receive(:load_categories)
@@ -30,10 +38,30 @@ describe PrioriData::Integration::Base do
   end
 
   describe '#load_categories' do
-    subject { instance.load_categories }
+    subject do
+      VCR.use_cassette("apple_categories_success") do
+        instance.load_categories
+      end
+    end
 
     it 'calls import on Categories' do
       expect(PrioriData::Integration::Categories).to receive(:import)
+    end
+  end
+
+  describe '.http_exceptions' do
+    let(:exceptions) do
+      [
+        Timeout::Error, Errno::EINVAL, Errno::ECONNRESET,
+        Errno::EHOSTUNREACH,Errno::ECONNREFUSED, EOFError,
+        Net::HTTPBadResponse, Net::HTTPHeaderSyntaxError, Net::ProtocolError
+      ]
+    end
+
+    subject { described_class.http_exceptions }
+
+    it 'returns all HTTP related exceptions' do
+      expect(subject).to eq(exceptions)
     end
   end
 end

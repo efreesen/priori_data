@@ -12,6 +12,14 @@ module PrioriData
       def load_categories
         Categories.import
       end
+
+      def self.http_exceptions
+        [
+          Timeout::Error, Errno::EINVAL, Errno::ECONNRESET,
+          Errno::EHOSTUNREACH,Errno::ECONNREFUSED, EOFError,
+          Net::HTTPBadResponse, Net::HTTPHeaderSyntaxError, Net::ProtocolError
+        ]
+      end
     end
   end
 end
