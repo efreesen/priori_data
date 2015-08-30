@@ -13,6 +13,12 @@ module PrioriData
         Categories.import
       end
 
+      def load_rankings
+        Category.all.each do |category|
+          Rankings.import(category.id)
+        end
+      end
+
       def self.http_exceptions
         [
           Timeout::Error, Errno::EINVAL, Errno::ECONNRESET,

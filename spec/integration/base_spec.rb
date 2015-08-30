@@ -49,6 +49,32 @@ describe PrioriData::Integration::Base do
     end
   end
 
+  describe '#load_rankings' do
+    let(:categories) do
+      result = []
+
+      10.times do |i|
+        result.push OpenStruct.new(id: i)
+      end
+
+      result
+    end
+
+    before do
+      allow(Category).to receive(:all).and_return(categories)
+    end
+
+    after do
+      subject
+    end
+
+    subject { described_class.new.load_rankings }
+
+    it 'creates rankings for all categories' do
+      expect(PrioriData::Integration::Rankings).to receive(:import).exactly(10)
+    end
+  end
+
   describe '.http_exceptions' do
     let(:exceptions) do
       [
