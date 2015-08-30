@@ -10,6 +10,7 @@ module PrioriData
       end
 
       def load_categories
+        Categories.import
       end
     end
   end
