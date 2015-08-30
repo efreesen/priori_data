@@ -1,7 +1,7 @@
 describe PrioriData::Integration::Base do
-  describe '.load!' do
-    let(:instance) { described_class.new }
+  let(:instance) { described_class.new }
 
+  describe '.load!' do
     subject { described_class.load! }
 
     before do
@@ -18,6 +18,20 @@ describe PrioriData::Integration::Base do
 
     it 'calls load on instance' do
       expect(instance).to receive(:load!)
+    end
+  end
+
+  describe '#load!' do
+    subject { instance.load! }
+
+    after do
+      subject
+    end
+
+    context 'when there is no data loaded on db' do
+      it 'loads all the categories' do
+        expect(instance).to receive(:load_categories)
+      end
     end
   end
 end

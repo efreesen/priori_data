@@ -6,6 +6,10 @@ module PrioriData
       end
 
       def load!
+        load_categories
+      end
+
+      def load_categories
       end
     end
   end
