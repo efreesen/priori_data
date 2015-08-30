@@ -34,10 +34,12 @@ describe PrioriData::Integration::Categories do
           end
         end
 
+        after do
+          subject
+        end
+
         it 'creates 2274 categories' do
           expect(PrioriData::Repositories::Category).to receive(:persist).exactly(2274)
-
-          subject
         end
       end
 
