@@ -1,4 +1,5 @@
 require 'grape'
+require './lib/priori_data'
 
 module PrioriData
   class API < Grape::API

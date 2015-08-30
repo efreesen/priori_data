@@ -1,7 +1,6 @@
 require 'rspec'
 require 'pry-meta'
-
-Dir["#{Dir.pwd}/app/**/*.rb"].each {|file| require file }
+require './lib/priori_data'
 
 RSpec.configure do |config|
   config.order = :random
