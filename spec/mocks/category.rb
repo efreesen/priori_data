@@ -1,13 +1,4 @@
-class Category
-  def self.where(args)
-    self
-  end
+require './spec/mocks/mocked_active_record'
 
-  def self.first_or_initialize
-    self.new
-  end
-
-  def update_attributes(args)
-    self
-  end
+class Category < MockedActiveRecord
 end
