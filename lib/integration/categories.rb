@@ -12,7 +12,11 @@ module PrioriData
       def import
         response = HTTParty.get(URL)
 
-        categories = JSON.parse(response.body)
+        if response.success?
+          categories = JSON.parse(response.body)
+        else
+          raise PrioriData::AppleServiceChangedException
+        end
       rescue *Base.http_exceptions
         raise PrioriData::AppleServiceNotAvailableException
       end
