@@ -4,11 +4,13 @@ require 'pry-meta'
 require './lib/priori_data'
 
 # Redefining all models
-  Object.send(:remove_const, :Category)
   Object.send(:remove_const, :App)
+  Object.send(:remove_const, :Category)
+  Object.send(:remove_const, :Ranking)
 
-  require './spec/mocks/category'
   require './spec/mocks/app'
+  require './spec/mocks/category'
+  require './spec/mocks/ranking'
 
 VCR.configure do |config|
   config.cassette_library_dir = "spec/fixtures/vcr_cassettes"
