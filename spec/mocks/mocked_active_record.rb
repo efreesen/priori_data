@@ -11,6 +11,10 @@ class MockedActiveRecord
     self.new
   end
 
+  def self.find(id)
+    self.new
+  end
+
   def update_attributes(args)
     self
   end

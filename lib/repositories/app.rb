@@ -8,5 +8,9 @@ module PrioriData::Repositories
 
       resource.update_attributes(params)
     end
+
+    def self.find(app_id)
+      ::App.find(app_id)
+    end
   end
 end

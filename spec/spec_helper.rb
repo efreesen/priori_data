@@ -5,8 +5,10 @@ require './lib/priori_data'
 
 # Redefining all models
   Object.send(:remove_const, :Category)
+  Object.send(:remove_const, :App)
 
   require './spec/mocks/category'
+  require './spec/mocks/app'
 
 VCR.configure do |config|
   config.cassette_library_dir = "spec/fixtures/vcr_cassettes"
