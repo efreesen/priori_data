@@ -19,11 +19,6 @@ module PrioriData
 
         return app.publisher_id if app
 
-        response = HTTParty.get(
-          BASE_URL,
-          query: query
-        )
-
         if response.success?
           json = JSON.parse(response.body)
 
@@ -35,6 +30,13 @@ module PrioriData
         end
       rescue *Base.http_exceptions
         raise PrioriData::AppleServiceNotAvailableException
+      end
+
+      def response
+        @response ||= HTTParty.get(
+            BASE_URL,
+            query: query
+          )
       end
 
       def map_app(json)

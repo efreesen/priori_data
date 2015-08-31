@@ -10,8 +10,6 @@ module PrioriData
       end
 
       def import
-        response = HTTParty.get(URL)
-
         if response.success?
           json = JSON.parse(response.body)
 
@@ -21,6 +19,10 @@ module PrioriData
         end
       rescue *Base.http_exceptions
         raise PrioriData::AppleServiceNotAvailableException
+      end
+
+      def response
+        @response ||= HTTParty.get(URL)
       end
 
       def map_categories(json)

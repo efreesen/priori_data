@@ -14,12 +14,6 @@ module PrioriData
       end
 
       def import
-        response = HTTParty.get(
-          BASE_URL,
-          query: query,
-          headers: headers
-        )
-
         if response.success?
           json = JSON.parse(response.body)
 
@@ -41,6 +35,14 @@ module PrioriData
             PrioriData::Repositories::Ranking.persist(@category_id, monetization, index+1, app_id, publisher_id)
           end
         end
+      end
+
+      def response
+        @response ||= HTTParty.get(
+            BASE_URL,
+            query: query,
+            headers: headers
+          )
       end
 
       private
