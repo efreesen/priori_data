@@ -1,5 +1,7 @@
 source 'https://rubygems.org'
 
+ruby '2.2.2'
+
 gem 'grape', '~> 0.13.0'
 gem 'grape-activerecord', '~> 1.0.3'
 gem 'mysql2', '~> 0.3.0'

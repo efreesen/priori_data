@@ -36,9 +36,9 @@ module PrioriData
           monetization = monetization_kinds[ranking["title"]]
 
           ranking["adamIds"].each_with_index do |app_id, index|
-            Apps.import(app_id)
+            publisher_id = Apps.import(app_id)
 
-            PrioriData::Repositories::Ranking.persist(@category_id, monetization, index+1, app_id)
+            PrioriData::Repositories::Ranking.persist(@category_id, monetization, index+1, app_id, publisher_id)
           end
         end
       end

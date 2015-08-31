@@ -93,7 +93,7 @@ describe PrioriData::Integration::Rankings do
       end
 
       it 'creates a ranking' do
-        expect(PrioriData::Repositories::Ranking).to receive(:persist).with(6001, :paid, 1, 327193945)
+        expect(PrioriData::Repositories::Ranking).to receive(:persist).with(6001, :paid, 1, 327193945, 303585709)
       end
     end
 
