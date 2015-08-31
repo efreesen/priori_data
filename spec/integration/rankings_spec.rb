@@ -89,7 +89,7 @@ describe PrioriData::Integration::Rankings do
       end
 
       it 'creates an app' do
-        expect(PrioriData::Integration::Apps).to receive(:import).with(327193945)
+        expect(PrioriData::Integration::Apps).to receive(:import).with(327193945).and_call_original
       end
 
       it 'creates a ranking' do
@@ -103,7 +103,7 @@ describe PrioriData::Integration::Rankings do
       end
 
       it 'creates 600 apps' do
-        expect(PrioriData::Integration::Apps).to receive(:import).exactly(600)
+        expect(PrioriData::Integration::Apps).to receive(:import).exactly(600).and_call_original
       end
 
       it 'creates 600 rankings' do
