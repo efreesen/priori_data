@@ -6,10 +6,12 @@ require './lib/priori_data'
 # Redefining all models
   Object.send(:remove_const, :App)
   Object.send(:remove_const, :Category)
+  Object.send(:remove_const, :Publisher)
   Object.send(:remove_const, :Ranking)
 
   require './spec/mocks/app'
   require './spec/mocks/category'
+  require './spec/mocks/publisher'
   require './spec/mocks/ranking'
 
 VCR.configure do |config|

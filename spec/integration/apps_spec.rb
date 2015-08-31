@@ -104,7 +104,7 @@ describe PrioriData::Integration::Apps do
   end
 
   describe '#map_app' do
-    let(:json) { { name: 'name' } }
+    let(:json) { { "artistId" => 13, "artistName" => 'name' } }
     subject { instance.map_app(json) }
 
     after do

@@ -22,7 +22,7 @@ module PrioriData
         if response.success?
           json = JSON.parse(response.body)
 
-          map_app(json)
+          map_app(json["results"].first)
 
           json["artist_id"]
         else
