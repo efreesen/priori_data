@@ -43,6 +43,7 @@ module PrioriData
         end
       end
 
+      private
       def headers
         @headers ||= begin
           {
@@ -65,7 +66,6 @@ module PrioriData
         }
       end
 
-      private
       def monetization_kinds
         @monetization_kinds ||= {
           "Top Paid iPhone Apps"     => :paid,
