@@ -1,6 +1,6 @@
 module PrioriData
   module Controllers
-    class Rankings
+    class Publishers
       def initialize(params)
         @params = params
         @resources = []
@@ -28,8 +28,19 @@ module PrioriData
       def hash
         return [] if @resources.nil? || @resources.empty?
 
-        @resources.map do |ranking|
-          app = ranking.app
+        require 'pry'; binding.pry
+
+        grouped_resources.map do |ranking|
+          publisher = ranking.publisher
+
+          {
+            publisher_id: publisher_id,
+            publisher_name: publisher.name,
+            rank: ,
+            number of apps,
+            app names
+          }
+
 
           {
             rank: ranking.rank,
@@ -43,6 +54,20 @@ module PrioriData
               average_user_rating: ('%.2f' % app.average_user_rating)
             }
           }
+        end
+      end
+
+      def grouped_resources
+        @grouped_resources ||= begin
+          @resources.group_by(&:publisher_id).map do |ranking|
+            require 'pry'; binding.pry
+            {
+              publisher_id: publisher_id,
+              publisher_name: publisher.name,
+              number_of_apps: ,
+              app_names: 
+            }
+          end
         end
       end
     end

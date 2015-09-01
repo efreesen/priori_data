@@ -36,7 +36,7 @@ module PrioriData
       end
 
       get ':category_id/:monetization' do
-        # Controllers::Publishers.index(params)
+        Controllers::Publishers.index(params)
       end
     end
   end

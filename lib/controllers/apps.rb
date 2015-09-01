@@ -20,8 +20,22 @@ module PrioriData
         error = @resource ? nil : 'Resource not found.'
 
         {
-          resource: (@resource || {}),
+          resource: hash,
           error: error
+        }
+      end
+
+      def hash
+        return {} unless @resource
+
+        {
+          name: @resource.name,
+          description: @resource.description,
+          small_icon_url: @resource.small_icon_url,
+          publisher_name: @resource.publisher.name,
+          price: ('%.2f' % @resource.price),
+          version_number: @resource.version,
+          average_user_rating: ('%.2f' % @resource.average_user_rating)
         }
       end
     end
