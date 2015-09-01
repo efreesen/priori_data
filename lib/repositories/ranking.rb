@@ -25,7 +25,7 @@ module PrioriData::Repositories
       raise ArgumentError.new('monetization must be passed') unless monetization
       raise ArgumentError.new("monetization must be one of these: #{monetization_options.join(', ')}") unless monetization_options.include? monetization
       raise ArgumentError.new('rank must be a fixnum') if rank.blank? || !rank.is_a?(Fixnum)
-      raise ArgumentError.new('app_id must be passed') if app_id.blank? || ![String, Fixnum].include?(publisher_id.class)
+      raise ArgumentError.new('app_id must be passed') if app_id.blank? || ![String, Fixnum].include?(app_id.class)
       raise ArgumentError.new('publisher_id must be passed') if publisher_id.blank? || ![String, Fixnum].include?(publisher_id.class)
     end
 
