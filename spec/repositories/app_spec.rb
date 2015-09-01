@@ -26,7 +26,7 @@ describe PrioriData::Repositories::App do
 
     context 'when params are valid' do
       let(:app) { App.new }
-      let(:attributes) do
+      let(:json) do
         {
           "artworkUrl60" => "http://is1.mzstatic.com/image/thumb/Purple6/v4/82/01/b0/8201b0dd-ca5b-1a28-0469-2458f8ad4d4c/AppIcon57x57.png/0x0ss-85.jpg",
           "averageUserRatingForCurrentVersion" => 4.5,
@@ -42,9 +42,21 @@ describe PrioriData::Repositories::App do
           "userRatingCount" => 3857
         }
       end
+      let(:attributes) do
+        {
+          external_id: json["trackId"],
+          name: json["trackName"],
+          description: ActiveSupport::Inflector.transliterate(json["description"]),
+          small_icon_url: json["artworkUrl60"],
+          publisher_id: json["artistId"],
+          price: json["price"],
+          version: json["version"],
+          average_user_rating: json["averageUserRating"]
+        }
+      end
       
       context 'and app is not found' do
-        subject { described_class.persist(attributes) }
+        subject { described_class.persist(json) }
 
         before do
           allow(App).to receive(:first_or_initialize).and_return(app)
@@ -55,7 +67,7 @@ describe PrioriData::Repositories::App do
         end
 
         it 'searches for existing category with same id' do
-          expect(App).to receive(:where).with(id: 327193945).and_call_original
+          expect(App).to receive(:where).with(external_id: 327193945).and_call_original
         end
 
         it 'creates category or updates it`s attributes' do
@@ -73,8 +85,8 @@ describe PrioriData::Repositories::App do
         subject
       end
 
-      it 'calls find on model class' do
-        expect(App).to receive(:find).with(id)
+      it 'calls where on model class' do
+        expect(App).to receive(:where).with(external_id: id).and_call_original
       end
     end
   end
