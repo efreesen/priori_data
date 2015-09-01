@@ -85,10 +85,11 @@ describe PrioriData::Integration::Rankings do
     context 'with a test JSON' do
       let(:json) do 
         {
+          "genre" => { "name" => "Genre Name" },
           "topCharts" => [
             {
               "adamIds" => [327193945],
-              "title"   => "Top Paid iPhone Apps"
+              "shortTitle"   => "Paid"
             }
           ]
         }

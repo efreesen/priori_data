@@ -27,12 +27,16 @@ module PrioriData
 
       def map_rankings(json)
         json["topCharts"].each do |ranking|
-          monetization = monetization_kinds[ranking["title"]]
+          monetization = monetization_kinds[ranking["shortTitle"]]
 
-          ranking["adamIds"].each_with_index do |app_id, index|
-            publisher_id = Apps.import(app_id)
+          if monetization
+            PrioriData::DataLogger.info "    - Importing #{monetization.to_s.capitalize} Ranking List for category: #{@category_id} (#{json["genre"]["name"]})"
 
-            PrioriData::Repositories::Ranking.persist(@category_id, monetization, index+1, app_id, publisher_id)
+            ranking["adamIds"].each_with_index do |app_id, index|
+              publisher_id = Apps.import(app_id)
+
+              PrioriData::Repositories::Ranking.persist(@category_id, monetization, index+1, app_id, publisher_id) if publisher_id
+            end
           end
         end
       end
@@ -70,9 +74,9 @@ module PrioriData
 
       def monetization_kinds
         @monetization_kinds ||= {
-          "Top Paid iPhone Apps"     => :paid,
-          "Top Free iPhone Apps"     => :free,
-          "Top Grossing iPhone Apps" => :grossing
+          "Paid"         => :paid,
+          "Free"         => :free,
+          "Top Grossing" => :grossing
         }
       end
     end
