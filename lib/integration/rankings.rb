@@ -1,19 +1,18 @@
 require 'httparty'
+require 'celluloid/backported'
 
 module PrioriData
   module Integration
     class Rankings
+      include Celluloid
+
+      Celluloid.shutdown_timeout = (20 * 60)
+
       BASE_URL = 'https://itunes.apple.com/WebObjects/MZStore.woa/wa/viewTop'
 
-      def initialize(category_id)
+      def import(category_id)
         @category_id = category_id
-      end
 
-      def self.import(category_id)
-        self.new(category_id).import
-      end
-
-      def import
         if response.success?
           json = JSON.parse(response.body)
 
@@ -32,11 +31,7 @@ module PrioriData
           if monetization
             PrioriData::DataLogger.info "    - Importing #{monetization.to_s.capitalize} Ranking List for category: #{@category_id} (#{json["genre"]["name"]})"
 
-            ranking["adamIds"].each_with_index do |app_id, index|
-              publisher_id = Apps.import(app_id)
-
-              PrioriData::Repositories::Ranking.persist(@category_id, monetization, index+1, app_id, publisher_id) if publisher_id
-            end
+            persist_data(ranking, monetization, ranking["adamIds"])
           end
         end
       end
@@ -47,6 +42,16 @@ module PrioriData
             query: query,
             headers: headers
           )
+      end
+
+      def persist_data(ranking, monetization, app_ids_batch)
+        publisher_ids = Apps.import(app_ids_batch)
+
+        app_ids_batch.each_with_index do |app_id, index|
+          publisher_id = publisher_ids[app_id.to_s]
+
+          PrioriData::Repositories::Ranking.persist(@category_id, monetization, index + 1, app_id, publisher_id) if publisher_id
+        end
       end
 
       private

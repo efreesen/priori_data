@@ -17,7 +17,7 @@ module PrioriData::Repositories
 
       ranking = ::Ranking.where(category_id: category_id, monetization: monetization, rank: rank).first_or_initialize
 
-      ranking.update_attributes(app_id: app_id, publisher_id: publisher_id)
+      ranking.update_attributes(category_id: category_id, monetization: monetization, rank: rank, app_id: app_id, publisher_id: publisher_id)
     end
 
     def validate_args

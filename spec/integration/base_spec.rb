@@ -59,6 +59,7 @@ describe PrioriData::Integration::Base do
   end
 
   describe '#load_rankings' do
+    let(:pool) { double }
     let(:categories) do
       result = []
 
@@ -71,6 +72,8 @@ describe PrioriData::Integration::Base do
 
     before do
       allow(Category).to receive(:all).and_return(categories)
+      allow(PrioriData::Integration::Rankings).to receive(:pool).and_return(pool)
+      allow(pool).to receive(:future)
     end
 
     after do
@@ -80,26 +83,26 @@ describe PrioriData::Integration::Base do
     subject { described_class.new.load_rankings }
 
     it 'creates rankings for all categories' do
-      expect(PrioriData::Integration::Rankings).to receive(:import).exactly(10)
+      expect(pool).to receive(:future).with(:import, anything).exactly(10)
     end
 
     context 'when service is not available' do
       before do
-        allow(PrioriData::Integration::Rankings).to receive(:import).and_raise(PrioriData::AppleServiceNotAvailableException)
+        allow_any_instance_of(PrioriData::Integration::Rankings).to receive(:import).and_raise(PrioriData::AppleServiceNotAvailableException)
       end
 
       it 'keeps trying to create other rankings' do
-        expect(PrioriData::Integration::Rankings).to receive(:import).exactly(10)
+        expect(pool).to receive(:future).with(:import, anything).exactly(10)
       end
     end
 
     context 'when service returns a failure' do
       before do
-        allow(PrioriData::Integration::Rankings).to receive(:import).and_raise(PrioriData::AppleServiceChangedException)
+        allow_any_instance_of(PrioriData::Integration::Rankings).to receive(:import).and_raise(PrioriData::AppleServiceChangedException)
       end
 
       it 'keeps trying to create other rankings' do
-        expect(PrioriData::Integration::Rankings).to receive(:import).exactly(10)
+        expect(pool).to receive(:future).with(:import, anything).exactly(10)
       end
     end
   end

@@ -24,14 +24,16 @@ module PrioriData
 
       def load_rankings
         PrioriData::DataLogger.info('  - Starting rankings import task.')
-        
+
+        pool = Rankings.pool(size: 69)
+
         Category.all.each do |category|
           begin
-            Rankings.import(category.id)
+            pool.future(:import, category.external_id)
           rescue PrioriData::AppleServiceNotAvailableException
-            PrioriData::DataLogger.info "    - Error importing rankings for category: #{category.id} (#{category.name}). Apple Service Not Available"
+            PrioriData::DataLogger.info "    - Error importing rankings for category: #{category.id} (#{category.name}). Apple Service Not Available."
           rescue PrioriData::AppleServiceChangedException
-            PrioriData::DataLogger.info "    - Error importing rankings for category: #{category.id} (#{category.name}). An error on request occurred"
+            PrioriData::DataLogger.info "    - Error importing rankings for category: #{category.id} (#{category.name}). Request returned an error status."
           end
         end
 

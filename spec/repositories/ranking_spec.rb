@@ -6,7 +6,7 @@ describe PrioriData::Repositories::Ranking do
   let(:rank) { 25 }
   let(:app_id) { 327193945 }
   let(:publisher_id) { 303585709 }
-  let(:attributes) { { app_id: app_id, publisher_id: publisher_id } }
+  let(:attributes) { { category_id: category_id, monetization: monetization, rank: rank, app_id: app_id, publisher_id: publisher_id } }
 
   describe '.persist' do    
     subject { described_class.persist(category_id, monetization, rank, app_id, publisher_id) }
