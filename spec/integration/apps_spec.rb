@@ -55,23 +55,47 @@ describe PrioriData::Integration::Apps do
       end
 
       context 'when service is available' do
-        context 'and response is success' do
-          subject do
-            VCR.use_cassette("apple_apps_success") do
-              instance.import
+        context 'response is success' do
+          context 'and resultCount greater than 0' do
+            subject do
+              VCR.use_cassette("apple_apps_success") do
+                instance.import
+              end
+            end
+
+            after do
+              subject
+            end
+
+            it 'makes request to the API' do
+              expect(HTTParty).to receive(:get).with("https://itunes.apple.com/lookup", {:query=>{:id=>app_id}}).and_call_original
+            end
+
+            it 'maps app' do
+              expect(instance).to receive(:map_app)
             end
           end
 
-          after do
-            subject
-          end
+          context 'and resultCount is 0' do
+            let(:app_id) { 3271939450 }
 
-          it 'makes request to the API' do
-            expect(HTTParty).to receive(:get).with("https://itunes.apple.com/lookup", {:query=>{:id=>327193945}}).and_call_original
-          end
+            subject do
+              VCR.use_cassette("apple_apps_no_app") do
+                instance.import
+              end
+            end
 
-          it 'maps app' do
-            expect(instance).to receive(:map_app)
+            after do
+              subject
+            end
+
+            it 'makes request to the API' do
+              expect(HTTParty).to receive(:get).with("https://itunes.apple.com/lookup", {:query=>{:id=>app_id}}).and_call_original
+            end
+
+            it 'does not map app' do
+              expect(instance).not_to receive(:map_app)
+            end
           end
         end
 
@@ -104,7 +128,16 @@ describe PrioriData::Integration::Apps do
   end
 
   describe '#map_app' do
-    let(:json) { { "artistId" => 13, "artistName" => 'name' } }
+    let(:json) do
+      {
+        "trackId" => 15,
+        "trackName" => "trackName",
+        "description" => "description",
+        "artistId" => 13,
+        "artistName" => 'artistName'
+      }
+    end
+
     subject { instance.map_app(json) }
 
     after do

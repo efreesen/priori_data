@@ -22,9 +22,9 @@ module PrioriData
         if response.success?
           json = JSON.parse(response.body)
 
-          map_app(json["results"].first)
+          map_app(json["results"].first) if json["resultCount"] > 0
 
-          json["artist_id"]
+          json["results"].first["artistId"] rescue nil
         else
           raise PrioriData::AppleServiceChangedException
         end
