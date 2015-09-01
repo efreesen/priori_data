@@ -7,9 +7,12 @@ namespace :db do
   end
 end
 
+task :load => :"db:environment" do
+  PrioriData::Integration::Base.load!
+end
+
 task :setup => :"db:environment" do
   Rake::Task['db:create'].invoke
   Rake::Task['db:migrate'].invoke
-
-  PrioriData::Integration::Base.load!
+  Rake::Task['load'].invoke
 end
