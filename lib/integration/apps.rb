@@ -3,28 +3,28 @@ require 'httparty'
 module PrioriData
   module Integration
     class Apps
-      attr_accessor :app_id
+      attr_accessor :app_ids
       BASE_URL = "https://itunes.apple.com/lookup"
 
-      def initialize(app_id)
-        @app_id = app_id
+      def initialize(app_ids)
+        @app_ids = app_ids
       end
 
-      def self.import(app_id)
-        self.new(app_id).import
+      def self.import(app_ids)
+        self.new(app_ids).import
       end
 
       def import
-        app = PrioriData::Repositories::App.find(app_id)
-
-        return app.publisher_id if app
-
         if response.success?
           json = JSON.parse(response.body)
+          publisher_ids = {}
 
-          map_app(json["results"].first) if json["resultCount"] > 0
+          json["results"].each do |app|
+            map_app(app)
+            publisher_ids[app["trackId"].to_s] = app["artistId"]
+          end
 
-          json["results"].first["artistId"] rescue nil
+          publisher_ids
         else
           raise PrioriData::AppleServiceChangedException
         end
@@ -46,7 +46,7 @@ module PrioriData
 
       private
       def query
-        { id: app_id }
+        { id: app_ids.join(',') }
       end
     end
   end
