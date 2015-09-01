@@ -42,7 +42,7 @@ describe PrioriData::Repositories::Category do
 
     context 'when all args are passed' do
       let(:category) { Category.new }
-      let(:attributes) { {name: 'test'} }
+      let(:attributes) { {"name" => 'test'} }
 
       subject { described_class.persist(13, attributes) }
 
@@ -55,11 +55,11 @@ describe PrioriData::Repositories::Category do
       end
 
       it 'searches for existing category with same id' do
-        expect(Category).to receive(:where).with(id: 13).and_call_original
+        expect(Category).to receive(:where).with(external_id: 13).and_call_original
       end
 
       it 'creates category or updates it`s attributes' do
-        expect(category).to receive(:update_attributes).with(attributes)
+        expect(category).to receive(:update_attributes).with(name: 'test')
       end
     end
   end
