@@ -6,24 +6,44 @@ module PrioriData
       end
 
       def load!
+        PrioriData::DataLogger.info('Starting load data task.')
+
         load_categories
+        load_rankings
+        
+        PrioriData::DataLogger.info('Data successfuly loaded to database.')
       end
 
       def load_categories
+        PrioriData::DataLogger.info('  - Starting categories list import.')
+        
         Categories.import
+        
+        PrioriData::DataLogger.info('  - Categories list successfuly imported.')
       end
 
       def load_rankings
+        PrioriData::DataLogger.info('  - Starting rankings import task.')
+        
         Category.all.each do |category|
-          Rankings.import(category.id)
+          begin
+            Rankings.import(category.id)
+          rescue PrioriData::AppleServiceNotAvailableException
+            PrioriData::DataLogger.info "    - Error importing rankings for category: #{category.id} (#{category.name}). Apple Service Not Available"
+          rescue PrioriData::AppleServiceChangedException
+            PrioriData::DataLogger.info "    - Error importing rankings for category: #{category.id} (#{category.name}). An error on request occurred"
+          end
         end
+
+        PrioriData::DataLogger.info('  - Rankings successfuly imported.')
       end
 
       def self.http_exceptions
         [
           Timeout::Error, Errno::EINVAL, Errno::ECONNRESET,
           Errno::EHOSTUNREACH,Errno::ECONNREFUSED, EOFError,
-          Net::HTTPBadResponse, Net::HTTPHeaderSyntaxError, Net::ProtocolError
+          Net::HTTPBadResponse, Net::HTTPHeaderSyntaxError, Net::ProtocolError,
+          Errno::ETIMEDOUT
         ]
       end
     end

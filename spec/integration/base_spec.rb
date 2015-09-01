@@ -14,6 +14,7 @@ describe PrioriData::Integration::Base do
 
     before do
       allow(described_class).to receive(:new).and_return(instance)
+      allow(Category).to receive(:all).and_return([])
     end
 
     it 'creates an instance' do
@@ -32,8 +33,16 @@ describe PrioriData::Integration::Base do
       end
     end
 
+    before do
+      allow(Category).to receive(:all).and_return([])
+    end
+
     it 'loads all the categories' do
       expect(instance).to receive(:load_categories)
+    end
+
+    it 'loads rankings for all categories' do
+      expect(instance).to receive(:load_rankings)
     end
   end
 
@@ -73,6 +82,26 @@ describe PrioriData::Integration::Base do
     it 'creates rankings for all categories' do
       expect(PrioriData::Integration::Rankings).to receive(:import).exactly(10)
     end
+
+    context 'when service is not available' do
+      before do
+        allow(PrioriData::Integration::Rankings).to receive(:import).and_raise(PrioriData::AppleServiceNotAvailableException)
+      end
+
+      it 'keeps trying to create other rankings' do
+        expect(PrioriData::Integration::Rankings).to receive(:import).exactly(10)
+      end
+    end
+
+    context 'when service returns a failure' do
+      before do
+        allow(PrioriData::Integration::Rankings).to receive(:import).and_raise(PrioriData::AppleServiceChangedException)
+      end
+
+      it 'keeps trying to create other rankings' do
+        expect(PrioriData::Integration::Rankings).to receive(:import).exactly(10)
+      end
+    end
   end
 
   describe '.http_exceptions' do
@@ -80,7 +109,8 @@ describe PrioriData::Integration::Base do
       [
         Timeout::Error, Errno::EINVAL, Errno::ECONNRESET,
         Errno::EHOSTUNREACH,Errno::ECONNREFUSED, EOFError,
-        Net::HTTPBadResponse, Net::HTTPHeaderSyntaxError, Net::ProtocolError
+        Net::HTTPBadResponse, Net::HTTPHeaderSyntaxError, Net::ProtocolError,
+        Errno::ETIMEDOUT
       ]
     end
 
