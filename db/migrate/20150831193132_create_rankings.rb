@@ -7,5 +7,8 @@ class CreateRankings < ActiveRecord::Migration
       t.integer :app_id
       t.integer :publisher_id
     end
+
+    add_index :rankings, [:category_id, :monetization]
+    add_index :rankings, [:category_id, :monetization, :rank]
   end
 end

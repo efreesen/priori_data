@@ -24,15 +24,22 @@ ActiveRecord::Schema.define(version: 20150831194006) do
     t.decimal "average_user_rating",               precision: 10
   end
 
+  add_index "apps", ["external_id"], name: "index_apps_on_external_id", using: :btree
+  add_index "apps", ["publisher_id"], name: "index_apps_on_publisher_id", using: :btree
+
   create_table "categories", force: :cascade do |t|
     t.integer "external_id", limit: 4
     t.string  "name",        limit: 255
   end
 
+  add_index "categories", ["external_id"], name: "index_categories_on_external_id", using: :btree
+
   create_table "publishers", force: :cascade do |t|
     t.string "external_id", limit: 255
     t.string "name",        limit: 255
   end
+
+  add_index "publishers", ["external_id"], name: "index_publishers_on_external_id", using: :btree
 
   create_table "rankings", force: :cascade do |t|
     t.integer "category_id",  limit: 4
@@ -41,5 +48,8 @@ ActiveRecord::Schema.define(version: 20150831194006) do
     t.integer "app_id",       limit: 4
     t.integer "publisher_id", limit: 4
   end
+
+  add_index "rankings", ["category_id", "monetization", "rank"], name: "index_rankings_on_category_id_and_monetization_and_rank", using: :btree
+  add_index "rankings", ["category_id", "monetization"], name: "index_rankings_on_category_id_and_monetization", using: :btree
 
 end

@@ -10,5 +10,8 @@ class CreateApps < ActiveRecord::Migration
       t.string  :version
       t.decimal :average_user_rating
     end
+
+    add_index :apps, :external_id
+    add_index :apps, :publisher_id
   end
 end
