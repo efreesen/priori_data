@@ -19,9 +19,9 @@ ActiveRecord::Schema.define(version: 20150831194006) do
     t.text    "description",         limit: 65535
     t.string  "small_icon_url",      limit: 255
     t.integer "publisher_id",        limit: 4
-    t.decimal "price",                             precision: 10
+    t.float   "price",               limit: 24,    default: 0.0
     t.string  "version",             limit: 255
-    t.decimal "average_user_rating",               precision: 10
+    t.float   "average_user_rating", limit: 24,    default: 0.0
   end
 
   add_index "apps", ["external_id"], name: "index_apps_on_external_id", using: :btree

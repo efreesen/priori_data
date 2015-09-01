@@ -6,9 +6,9 @@ class CreateApps < ActiveRecord::Migration
       t.text    :description
       t.string  :small_icon_url
       t.integer :publisher_id
-      t.decimal :price
+      t.float :price, default: 0.0
       t.string  :version
-      t.decimal :average_user_rating
+      t.float :average_user_rating, default: 0.0
     end
 
     add_index :apps, :external_id

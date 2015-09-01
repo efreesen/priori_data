@@ -11,9 +11,9 @@ module PrioriData::Repositories
         description: description(params),
         small_icon_url: params["artworkUrl60"],
         publisher_id: params["artistId"],
-        price: params["price"],
+        price: params["price"] || 0.0,
         version: params["version"],
-        average_user_rating: params["averageUserRating"]
+        average_user_rating: params["averageUserRating"] || 0.0
       }
 
       resource.update_attributes(attributes)
