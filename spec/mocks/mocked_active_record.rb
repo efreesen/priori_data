@@ -1,4 +1,8 @@
 class MockedActiveRecord
+  def self.first
+    self
+  end
+
   def self.all
     self
   end
