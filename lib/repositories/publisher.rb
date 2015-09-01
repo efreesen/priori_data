@@ -3,8 +3,8 @@ module PrioriData::Repositories
     attr_accessor :id, :name
 
     def initialize(params)
-      @id   = params["artistId"]
       @name = params["artistName"]
+      @id   = params["artistId"]
     end
 
     def self.persist(params)
@@ -24,11 +24,11 @@ module PrioriData::Repositories
 
     private
     def resource
-      ::Publisher.where(id: id).first_or_initialize
+      ::Publisher.where(external_id: id).first_or_initialize
     end
 
     def attributes
-      { name: name }
+      { external_id: id, name: name }
     end
   end
 end

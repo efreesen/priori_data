@@ -1,7 +1,7 @@
 describe PrioriData::Repositories::Publisher do
   let(:instance) { described_class.new(json) }
   let(:model) { Publisher.new }
-  let(:attributes) { { name: json["artistName"] } }
+  let(:attributes) { { external_id: json["artistId"], name: json["artistName"] } }
   let(:json) do
     {
       "artworkUrl60" => "http://is1.mzstatic.com/image/thumb/Purple6/v4/82/01/b0/8201b0dd-ca5b-1a28-0469-2458f8ad4d4c/AppIcon57x57.png/0x0ss-85.jpg",
@@ -47,7 +47,7 @@ describe PrioriData::Repositories::Publisher do
     end
 
     it 'searches for existing publisher with same id' do
-      expect(Publisher).to receive(:where).with(id: 303585709).and_call_original
+      expect(Publisher).to receive(:where).with(external_id: 303585709).and_call_original
     end
 
     it 'creates publisher or updates it`s attributes' do
