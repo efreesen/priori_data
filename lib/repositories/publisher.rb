@@ -25,6 +25,8 @@ module PrioriData::Repositories
     private
     def resource
       ::Publisher.where(external_id: id).first_or_initialize
+    rescue ActiveRecord::ConnectionTimeoutError
+      retry
     end
 
     def attributes
