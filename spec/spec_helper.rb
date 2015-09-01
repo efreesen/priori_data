@@ -14,6 +14,8 @@ require './lib/priori_data'
   require './spec/mocks/publisher'
   require './spec/mocks/ranking'
 
+PrioriData::DataLogger.instance.level = Logger::ERROR
+
 VCR.configure do |config|
   config.cassette_library_dir = "spec/fixtures/vcr_cassettes"
   config.hook_into :webmock
