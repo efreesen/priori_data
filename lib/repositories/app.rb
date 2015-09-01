@@ -29,7 +29,7 @@ module PrioriData::Repositories
     end
 
     def self.description(params)
-      ActiveSupport::Inflector.transliterate(params["description"] || params["longDescription"])
+      ActiveSupport::Inflector.transliterate(params["description"] || params["longDescription"] || '')
     end
   end
 end
