@@ -29,6 +29,14 @@ module PrioriData::Repositories
       raise ArgumentError.new('publisher_id must be passed') if publisher_id.blank? || ![String, Fixnum].include?(publisher_id.class)
     end
 
+    def self.find_app(category_id, monetization, rank)
+      ::Ranking.includes(:app).where(category_id: category_id, monetization: monetization, rank: rank).first.try :app
+    end
+
+    def self.find_ranking(category_id, monetization)
+      ::Ranking.includes(:app).where(category_id: category_id, monetization: monetization)
+    end
+
     private
     attr_accessor :category_id, :monetization, :rank, :app_id, :publisher_id
 
