@@ -35,9 +35,7 @@ module PrioriData
       def response
         @response ||= HTTParty.get(
             BASE_URL,
-            query: query,
-            http_proxyaddr: "165.139.179.225",
-            http_proxyport: 8080
+            query: query
           )
       end
 

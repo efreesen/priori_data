@@ -28,46 +28,26 @@ module PrioriData
       def hash
         return [] if @resources.nil? || @resources.empty?
 
-        require 'pry'; binding.pry
-
-        grouped_resources.map do |ranking|
-          publisher = ranking.publisher
-
+        grouped_resources.each_with_index.map do |publisher, index|
           {
-            publisher_id: publisher_id,
-            publisher_name: publisher.name,
-            rank: ,
-            number of apps,
-            app names
-          }
-
-
-          {
-            rank: ranking.rank,
-            app: {
-              name: app.name,
-              description: app.description,
-              small_icon_url: app.small_icon_url,
-              publisher_name: app.publisher.name,
-              price: ('%.2f' % app.price),
-              version_number: app.version,
-              average_user_rating: ('%.2f' % app.average_user_rating)
-            }
+            rank: index + 1,
+            publisher: publisher
           }
         end
       end
 
       def grouped_resources
         @grouped_resources ||= begin
-          @resources.group_by(&:publisher_id).map do |ranking|
-            require 'pry'; binding.pry
+          grouped = @resources.group_by(&:publisher_id).map do |ranking|
             {
-              publisher_id: publisher_id,
-              publisher_name: publisher.name,
-              number_of_apps: ,
-              app_names: 
+              publisher_id: ranking.last.first.publisher_id,
+              publisher_name: ranking.last.first.publisher.name,
+              number_of_apps: ranking.last.count,
+              app_names: ranking.last.map{ |r| r.app.name }
             }
           end
+
+          grouped.sort_by{ |ranking| ranking[:number_of_apps] }.reverse!
         end
       end
     end
