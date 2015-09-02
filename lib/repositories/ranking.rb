@@ -30,7 +30,7 @@ module PrioriData::Repositories
     end
 
     def self.find_app(category_id, monetization, rank)
-      ::Ranking.eager_load([:app, :publisher]).where(category_id: category_id, monetization: monetization, rank: rank).first.try :app
+      ::Ranking.eager_load([:app, :publisher]).where(category_id: category_id, monetization: monetization, rank: rank).limit(1).first.try :app
     end
 
     def self.find_ranking(category_id, monetization)

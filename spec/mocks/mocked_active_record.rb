@@ -7,7 +7,15 @@ class MockedActiveRecord
     self
   end
 
+  def self.eager_load(args)
+    self
+  end
+
   def self.where(args)
+    self
+  end
+
+  def self.limit(limit)
     self
   end
 

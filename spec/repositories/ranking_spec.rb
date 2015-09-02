@@ -142,4 +142,111 @@ describe PrioriData::Repositories::Ranking do
       end
     end
   end
+
+  describe ".find_app" do
+    let(:app) { App.new }
+    let(:category_id) { 1 }
+    let(:monetization) { 'free' }
+    let(:rank) { 14 }
+
+    subject do
+      described_class.find_app(category_id, monetization, rank)
+    end
+
+    after { subject }
+
+    context 'when apps are found' do
+      before do
+        result = [OpenStruct.new(app: app)]
+
+        allow(Ranking).to receive(:limit).and_return(result)
+      end
+
+      it 'eagerly loads the app and the publisher' do
+        expect(Ranking).to receive(:eager_load).with([:app, :publisher]).and_call_original
+      end
+
+      it 'searches for the app' do
+        expect(Ranking).to receive(:where).with(category_id: category_id, monetization: monetization, rank: rank).and_call_original
+      end
+
+      it 'limits the result set to one result' do
+        expect(Ranking).to receive(:limit).with(1).and_call_original
+      end
+
+      it 'returns the found app' do
+        expect(subject).to eq app
+      end
+    end
+
+    context 'when no apps are found' do
+      before do
+        allow(Ranking).to receive(:limit).and_return([])
+      end
+
+      it 'eagerly loads the app and the publisher' do
+        expect(Ranking).to receive(:eager_load).with([:app, :publisher]).and_call_original
+      end
+
+      it 'searches for the app' do
+        expect(Ranking).to receive(:where).with(category_id: category_id, monetization: monetization, rank: rank).and_call_original
+      end
+
+      it 'limits the result set to one result' do
+        expect(Ranking).to receive(:limit).with(1).and_call_original
+      end
+
+      it 'returns nil' do
+        expect(subject).to be_nil
+      end
+    end
+  end
+
+  describe ".find_ranking" do
+    let(:ranking) { Ranking.new }
+    let(:category_id) { 1 }
+    let(:monetization) { 'free' }
+
+    subject do
+      described_class.find_ranking(category_id, monetization)
+    end
+
+    after { subject }
+
+    context 'when rankings are found' do
+      before do
+        allow(Ranking).to receive(:where).and_return([ranking])
+      end
+
+      it 'eagerly loads the ranking and the publisher' do
+        expect(Ranking).to receive(:eager_load).with(:app).and_call_original
+      end
+
+      it 'searches for the ranking' do
+        expect(Ranking).to receive(:where).with(category_id: category_id, monetization: monetization).and_call_original
+      end
+
+      it 'returns the found ranking' do
+        expect(subject).to eq [ranking]
+      end
+    end
+
+    context 'when no rankings are found' do
+      before do
+        allow(Ranking).to receive(:where).and_return([])
+      end
+
+      it 'eagerly loads the ranking and the publisher' do
+        expect(Ranking).to receive(:eager_load).with(:app).and_call_original
+      end
+
+      it 'searches for the ranking' do
+        expect(Ranking).to receive(:where).with(category_id: category_id, monetization: monetization).and_call_original
+      end
+
+      it 'returns an empty result set' do
+        expect(subject).to be_empty
+      end
+    end
+  end
 end
