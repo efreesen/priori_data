@@ -2,6 +2,7 @@ module PrioriData
   module Controllers
     class Rankings
       def initialize(params)
+        @message = nil
         @params = params
         @resources = []
       end
@@ -11,31 +12,29 @@ module PrioriData
       end
 
       def index
-        @resources = PrioriData::Repositories::Ranking.find_ranking(@params[:category_id], @params[:monetization])
+        if monetization_valid?
+          @resources = PrioriData::Repositories::Ranking.find_ranking(params[:category_id], params[:monetization])
+        else
+          @message = 'Invalid monetization param, should be one of these: paid, free or grossing'
+        end
 
         response
       end
 
       def response
-        error = @resources.any? ? nil : 'Resources not found.'
+        error = (resources.any? || message) ? message : 'Resources not found.'
 
         {
-          resources: hash,
+          resources: PrioriData::VOs::Ranking.hash(resources),
           error: error
         }
       end
 
-      def hash
-        return [] if @resources.nil? || @resources.empty?
+      private
+      attr_accessor :resources, :message, :params
 
-        @resources.map do |ranking|
-          app = ranking.app
-
-          {
-            rank: ranking.rank,
-            app: PrioriData::VOs::App.hash(app)
-          }
-        end
+      def monetization_valid?
+        ['paid', 'free', 'grossing'].include?(params[:monetization])
       end
     end
   end
