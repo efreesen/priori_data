@@ -9,7 +9,7 @@ module PrioriData
     resource :rankings do
       params do
         requires :category_id, type: Integer, desc: "Category id."
-        requires :monetization, type: String, desc: "Monetization kind."
+        requires :monetization, type: String, desc: "Monetization kind.", values: ['paid', 'free', 'grossing']
       end
 
       get ':category_id/:monetization' do
@@ -20,7 +20,7 @@ module PrioriData
     resource :apps do
       params do
         requires :category_id, type: Integer, desc: "Category id."
-        requires :monetization, type: String, desc: "Monetization kind."
+        requires :monetization, type: String, desc: "Monetization kind.", values: ['paid', 'free', 'grossing']
         requires :rank, type: Integer, desc: "App rank on the list."
       end
 
@@ -32,7 +32,7 @@ module PrioriData
     resource :publishers do
       params do
         requires :category_id, type: Integer, desc: "Category id."
-        requires :monetization, type: String, desc: "Monetization kind."
+        requires :monetization, type: String, desc: "Monetization kind.", values: ['paid', 'free', 'grossing']
       end
 
       get ':category_id/:monetization' do
