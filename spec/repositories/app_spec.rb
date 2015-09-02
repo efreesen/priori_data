@@ -75,19 +75,19 @@ describe PrioriData::Repositories::App do
         end
       end
     end
+  end
 
-    describe '.find' do
-      let(:id) { 1000 }
+  describe '.find' do
+    let(:id) { 1000 }
 
-      subject { described_class.find(id) }
+    subject { described_class.find(id) }
 
-      after do
-        subject
-      end
+    after do
+      subject
+    end
 
-      it 'calls where on model class' do
-        expect(App).to receive(:where).with(external_id: id).and_call_original
-      end
+    it 'calls where on model class' do
+      expect(App).to receive(:where).with(external_id: id).and_call_original
     end
   end
 end
