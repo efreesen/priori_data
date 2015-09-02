@@ -112,4 +112,62 @@ describe PrioriData::Integration::Rankings do
       end
     end
   end
+
+  describe '#persist_data' do
+    let(:monetization) { :grossing }
+
+    subject { instance.persist_data(monetization, app_ids_batch) }
+
+    after { subject }
+
+    context 'when the batch is empty' do
+      let(:app_ids_batch) { [] }
+
+      it 'imports no app' do
+        expect(PrioriData::Integration::Apps).not_to receive(:import)
+      end
+
+      it 'creates no ranking' do
+        expect(PrioriData::Repositories::Ranking).not_to receive(:persist)
+      end
+    end
+
+    context 'when the batch has elements' do
+      context 'and app_id has a correlated publisher_id' do
+        let(:app_ids_batch) { [1, 2, 3] }
+        let(:publisher_ids) { {"1" => 10, "2" => 20, "3" => 30} }
+
+        before do
+          allow(PrioriData::Integration::Apps).to receive(:import).with(app_ids_batch).and_return(publisher_ids)
+          allow(PrioriData::Repositories::Ranking).to receive(:persist)
+        end
+
+        it 'imports apps' do
+          expect(PrioriData::Integration::Apps).to receive(:import).with(app_ids_batch).and_return(publisher_ids)
+        end
+
+        it 'creates a ranking with valid attributes' do
+          expect(PrioriData::Repositories::Ranking).to receive(:persist).with(nil, monetization, 2, 2, 20).at_least(:once)
+        end
+      end
+
+      context 'and app_id has no correlated publisher_id' do
+        let(:app_ids_batch) { [1] }
+        let(:publisher_ids) { {"2" => 20} }
+
+        before do
+          allow(PrioriData::Integration::Apps).to receive(:import).with(app_ids_batch).and_return(publisher_ids)
+          allow(PrioriData::Repositories::Ranking).to receive(:persist)
+        end
+
+        it 'imports apps' do
+          expect(PrioriData::Integration::Apps).to receive(:import).with(app_ids_batch).and_return(publisher_ids)
+        end
+
+        it 'does not create a ranking' do
+          expect(PrioriData::Repositories::Ranking).not_to receive(:persist)
+        end
+      end
+    end
+  end
 end

@@ -31,7 +31,7 @@ module PrioriData
           if monetization
             PrioriData::DataLogger.info "    - Importing #{monetization.to_s.capitalize} Ranking List for category: #{@category_id} (#{json["genre"]["name"]})"
 
-            persist_data(ranking, monetization, ranking["adamIds"])
+            persist_data(monetization, ranking["adamIds"])
           end
         end
       end
@@ -44,8 +44,8 @@ module PrioriData
           )
       end
 
-      def persist_data(ranking, monetization, app_ids_batch)
-        publisher_ids = Apps.import(app_ids_batch)
+      def persist_data(monetization, app_ids_batch)
+        publisher_ids = Apps.import(app_ids_batch) if app_ids_batch && app_ids_batch.any?
 
         app_ids_batch.each_with_index do |app_id, index|
           publisher_id = publisher_ids[app_id.to_s]
