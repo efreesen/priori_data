@@ -78,4 +78,52 @@ describe PrioriData::Integration::Categories do
       end
     end
   end
+
+  describe '#map_categories' do
+    subject { instance.map_categories(json) }
+
+    after do
+      subject
+    end
+
+    context 'when json has elements' do
+      context 'is a valid category' do
+        before do
+          allow(PrioriData::Repositories::Category).to receive(:persist)
+        end
+
+        context 'has subgenres' do
+          let(:json) { {"6001" => {"subgenres" => {"6002" => {}}}} }
+
+          it 'ignores the invalid category' do
+            expect(instance).to receive(:map_categories).twice.and_call_original
+          end
+        end
+
+        context 'has no subgenres' do
+          let(:json) { {"6001" => {"subgenres" => {}}} }
+
+          it 'ignores the invalid category' do
+            expect(instance).to receive(:map_categories).and_call_original
+          end
+        end
+      end
+
+      context 'is an invalid category' do
+        let(:json) { {"1" => {}, "6001" => {}, "6002" => {}} }
+
+        it 'ignores the invalid category' do
+          expect(PrioriData::Repositories::Category).to receive(:persist).twice
+        end
+      end
+    end
+
+    context 'when json is empty' do
+      let(:json) { [] }
+
+      it 'does nothing' do
+        expect(described_class).not_to receive(:valid_categories)
+      end
+    end
+  end
 end

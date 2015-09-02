@@ -39,7 +39,7 @@ module PrioriData
 
           PrioriData::Repositories::Category.persist(id, category)
 
-          map_categories(subgenres) if subgenres
+          map_categories(subgenres) if subgenres && subgenres.any?
         end
       end
     end
