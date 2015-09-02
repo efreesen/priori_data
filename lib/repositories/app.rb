@@ -5,7 +5,16 @@ module PrioriData::Repositories
 
       resource = ::App.where(external_id: params["trackId"]).first_or_initialize
 
-      attributes = {
+      resource.update_attributes(attributes(params))
+    end
+
+    def self.find(app_id)
+      ::App.where(external_id: app_id).first
+    end
+
+    private
+    def self.attributes(params)
+      {
         external_id: params["trackId"],
         name: name(params),
         description: description(params),
@@ -15,15 +24,8 @@ module PrioriData::Repositories
         version: params["version"],
         average_user_rating: params["averageUserRating"] || 0.0
       }
-
-      resource.update_attributes(attributes)
     end
 
-    def self.find(app_id)
-      ::App.where(external_id: app_id).first
-    end
-
-    private
     def self.name(params)
       ActiveSupport::Inflector.transliterate params["trackName"]
     end
