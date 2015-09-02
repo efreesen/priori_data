@@ -3,7 +3,6 @@ describe PrioriData::VOs::Ranking do
     subject { described_class.hash(resources) }
 
     context 'when there is a resource' do
-      let(:publisher) { OpenStruct.new(name: 'publisher_name') }
       let(:resources) { params.map { |param| OpenStruct.new(param) } }
       let(:params) do
         [

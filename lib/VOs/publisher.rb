@@ -13,19 +13,19 @@ module PrioriData
       end
 
       def self.grouped_resources(resources)
-        grouped = resources.group_by(&:publisher_id).map do |ranking|
-          attributes(ranking)
+        grouped = resources.group_by(&:publisher_id).map do |publisher_id, apps|
+          attributes(publisher_id, apps)
         end
 
         grouped.sort_by{ |ranking| ranking[:number_of_apps] }.reverse!
       end
 
-      def self.attributes(ranking)
+      def self.attributes(publisher_id, apps)
         {
-          publisher_id: ranking.last.first.publisher_id,
-          publisher_name: ranking.last.first.publisher.name,
-          number_of_apps: ranking.last.count,
-          app_names: ranking.last.map{ |r| r.app.name }
+          publisher_id: publisher_id,
+          publisher_name: apps.first.publisher.name,
+          number_of_apps: apps.count,
+          app_names: apps.map{ |r| r.app.name }
         }
       end
     end
