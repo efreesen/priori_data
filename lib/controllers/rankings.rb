@@ -33,15 +33,7 @@ module PrioriData
 
           {
             rank: ranking.rank,
-            app: {
-              name: app.name,
-              description: app.description,
-              small_icon_url: app.small_icon_url,
-              publisher_name: app.publisher.name,
-              price: ('%.2f' % app.price),
-              version_number: app.version,
-              average_user_rating: ('%.2f' % app.average_user_rating)
-            }
+            app: PrioriData::VOs::App.hash(app)
           }
         end
       end
