@@ -27,14 +27,8 @@ module PrioriData
 
         pool = Rankings.pool(size: 69)
 
-        Category.all.each do |category|
-          begin
-            pool.future(:import, category.external_id)
-          rescue PrioriData::AppleServiceNotAvailableException
-            PrioriData::DataLogger.info "    - Error importing rankings for category: #{category.id} (#{category.name}). Apple Service Not Available."
-          rescue PrioriData::AppleServiceChangedException
-            PrioriData::DataLogger.info "    - Error importing rankings for category: #{category.id} (#{category.name}). Request returned an error status."
-          end
+        Category.all.map do |category|
+          pool.future(:import, category.external_id)
         end
 
         PrioriData::DataLogger.info('  - Rankings successfuly imported.')

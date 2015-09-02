@@ -18,10 +18,10 @@ module PrioriData
 
           map_rankings(json)
         else
-          raise PrioriData::AppleServiceChangedException
+          PrioriData::DataLogger.error "      - Request returned an error importing Rankings data from category #{category_id}: status: #{response.code}."
         end
       rescue *Base.http_exceptions
-        raise PrioriData::AppleServiceNotAvailableException
+        PrioriData::DataLogger.error "      - Apple Service not available. Could not import Rankings data for category #{category_id}."
       end
 
       def map_rankings(json)

@@ -32,8 +32,12 @@ describe PrioriData::Integration::Rankings do
           end
         end
 
-        it 'raises AppleServiceChangedException' do
-          expect{subject}.to raise_error(PrioriData::AppleServiceChangedException)
+        after do
+          subject
+        end
+
+        it 'logs the error' do
+          expect(PrioriData::DataLogger).to receive(:error).with('      - Request returned an error importing Rankings data from category 6001: status: 404.')
         end
       end
     end
@@ -45,8 +49,12 @@ describe PrioriData::Integration::Rankings do
         allow(HTTParty).to receive(:get).and_raise(Errno::EHOSTUNREACH)
       end
 
-      it 'raises AppleServiceNotAvailableException' do
-        expect{subject}.to raise_error(PrioriData::AppleServiceNotAvailableException)
+      after do
+        subject
+      end
+
+      it 'logs the error' do
+        expect(PrioriData::DataLogger).to receive(:error).with('      - Apple Service not available. Could not import Rankings data for category 6001.')
       end
     end
   end

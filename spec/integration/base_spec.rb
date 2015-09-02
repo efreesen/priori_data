@@ -35,6 +35,7 @@ describe PrioriData::Integration::Base do
 
     before do
       allow(Category).to receive(:all).and_return([])
+      allow(instance).to receive(:load_rankings)
     end
 
     it 'loads all the categories' do
@@ -60,6 +61,7 @@ describe PrioriData::Integration::Base do
 
   describe '#load_rankings' do
     let(:pool) { double }
+    let(:future) { double }
     let(:categories) do
       result = []
 
@@ -73,7 +75,8 @@ describe PrioriData::Integration::Base do
     before do
       allow(Category).to receive(:all).and_return(categories)
       allow(PrioriData::Integration::Rankings).to receive(:pool).and_return(pool)
-      allow(pool).to receive(:future)
+      allow(pool).to receive(:future).and_return(future)
+      allow(future).to receive(:value)
     end
 
     after do
