@@ -2,6 +2,7 @@ module PrioriData
   module Controllers
     class Publishers
       def initialize(params)
+        @message = nil
         @params = params
         @resources = []
       end
@@ -11,44 +12,29 @@ module PrioriData
       end
 
       def index
-        @resources = PrioriData::Repositories::Ranking.find_ranking(@params[:category_id], @params[:monetization])
+        if monetization_valid?
+          @resources = PrioriData::Repositories::Ranking.find_ranking(params[:category_id], params[:monetization])
+        else
+          @message = 'Invalid monetization param, should be one of these: paid, free or grossing'
+        end
 
         response
       end
 
       def response
-        error = @resources.any? ? nil : 'Resources not found.'
+        error = (resources.any? || message) ? message : 'Resources not found.'
 
         {
-          resources: hash,
+          resources: PrioriData::VOs::Publisher.hash(resources),
           error: error
         }
       end
 
-      def hash
-        return [] if @resources.nil? || @resources.empty?
+      private
+      attr_accessor :resources, :message, :params
 
-        grouped_resources.each_with_index.map do |publisher, index|
-          {
-            rank: index + 1,
-            publisher: publisher
-          }
-        end
-      end
-
-      def grouped_resources
-        @grouped_resources ||= begin
-          grouped = @resources.group_by(&:publisher_id).map do |ranking|
-            {
-              publisher_id: ranking.last.first.publisher_id,
-              publisher_name: ranking.last.first.publisher.name,
-              number_of_apps: ranking.last.count,
-              app_names: ranking.last.map{ |r| r.app.name }
-            }
-          end
-
-          grouped.sort_by{ |ranking| ranking[:number_of_apps] }.reverse!
-        end
+      def monetization_valid?
+        ['paid', 'free', 'grossing'].include?(params[:monetization])
       end
     end
   end
