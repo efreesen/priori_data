@@ -1,24 +1,28 @@
-== README
+## README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+The task is to create a REST API that pulls the Apple App Store top lists from US and provides additional metadata information for each of the ids returned via Apple lookup API together with a simple aggregation functionality.
 
-Things you may want to cover:
+# Setup
 
-* Ruby version
+To setup the app you must first configure the config/database.yml and then run the following command:
 
-* System dependencies
+rake setup
 
-* Configuration
+# Usage
 
-* Database creation
+To start the server you can run:
 
-* Database initialization
+rackup
 
-* How to run the test suite
+# Routes
 
-* Services (job queues, cache servers, search engines, etc.)
+The API has the following routes:
 
-* Deployment instructions
+  - Rankings:
+    http://localhost:9292/api/rankings/:category_id/:monetization
 
-* ...
+  - Apps:
+    http://localhost:9292/api/apps/:category_id/:monetization/:rank
+
+  - Publishers:
+    http://localhost:9292/api/publishers/:category_id/:monetization
